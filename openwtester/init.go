@@ -1,7 +1,7 @@
 package openwtester
 
 import (
-	"github.com/blocktree/hypercash-adapter/hypercash"
+	"github.com/Assetsadapter/hypercash-adapter/hypercash"
 	"github.com/blocktree/openwallet/log"
 	"github.com/blocktree/openwallet/openw"
 )
