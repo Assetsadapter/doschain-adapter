@@ -4,7 +4,7 @@ go 1.12
 
 require (
 	github.com/HcashOrg/bliss v0.0.0-20180719035130-f5d53c2a9b7d // indirect
-	github.com/HcashOrg/hcd v0.0.0-20190611115530-593f7eea8b25
+	github.com/HcashOrg/hcd v0.0.0-20190305021358-107cea0f670f
 	github.com/agl/ed25519 v0.0.0-20170116200512-5312a6153412 // indirect
 	github.com/asdine/storm v2.1.2+incompatible
 	github.com/astaxie/beego v1.11.1

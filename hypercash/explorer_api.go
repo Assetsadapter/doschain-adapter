@@ -70,7 +70,6 @@ func (b *Explorer) Call(path string, request interface{}, method string) (*gjson
 	if b.Debug {
 		log.Std.Debug("Request API Completed")
 	}
-
 	if b.Debug {
 		log.Std.Debug("%+v", r)
 	}
@@ -146,7 +145,7 @@ func (wm *WalletManager) getBlockHeightByExplorer() (uint64, error) {
 		return 0, err
 	}
 
-	height := result.Get("blocks").Uint()
+	height := result.Get("info.blocks").Uint()
 
 	return height, nil
 }
@@ -177,7 +176,7 @@ func (wm *WalletManager) getTransactionByExplorer(txid string) (*Transaction, er
 func (wm *WalletManager) listUnspentByExplorer(address ...string) ([]*Unspent, error) {
 
 	var (
-		utxos = make([]*Unspent, 0)
+		utxos   = make([]*Unspent, 0)
 		utxoMap = make(map[string]*Unspent, 0)
 	)
 
