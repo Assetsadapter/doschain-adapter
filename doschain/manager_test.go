@@ -13,7 +13,7 @@
  * GNU Lesser General Public License for more details.
  */
 
-package hypercash
+package doschain
 
 import (
 	"fmt"
@@ -40,16 +40,16 @@ func testNewWalletManager() *WalletManager {
 	wm := NewWalletManager()
 
 	//读取配置
-	absFile := filepath.Join("conf", "HC.ini")
+	absFile := filepath.Join("conf", "DOS.ini")
 	//	//log.Debug("absFile:", absFile)
 	c, err := config.NewConfig("ini", absFile)
 	if err != nil {
 		panic(err)
 	}
 	wm.LoadAssetsConfig(c)
-	wm.ExplorerClient.Debug = true
+	//wm.ExplorerClient.Debug = true
 	//wm.WalletClient.Debug = true
-	wm.OnmiClient.Debug = true
+	//wm.OnmiClient.Debug = true
 	return wm
 }
 

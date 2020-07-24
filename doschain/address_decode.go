@@ -13,7 +13,7 @@
  * GNU Lesser General Public License for more details.
  */
 
-package hypercash
+package doschain
 
 import (
 	"github.com/blocktree/go-owcdrivers/addressEncoder"
@@ -72,14 +72,15 @@ func (decoder *addressDecoder) PrivateKeyToWIF(priv []byte, isTestnet bool) (str
 	return "", nil
 
 }
+var DOS_mainnetAddressP2PKH      = addressEncoder.AddressType{"base58", addressEncoder.HCAlphabet, "doubleBlake256", "h160", 20, []byte{0x0e, 0x6b}, nil} //PubKeyHashAddrID, stars with Sc
 
 //PublicKeyToAddress 公钥转地址
 func (decoder *addressDecoder) PublicKeyToAddress(pub []byte, isTestnet bool) (string, error) {
 
-	cfg := addressEncoder.HC_mainnetAddressP2PKH
-	if decoder.wm.Config.IsTestNet {
-		cfg = addressEncoder.HC_testnetAddressP2PKH
-	}
+	cfg := DOS_mainnetAddressP2PKH
+	//if decoder.wm.Config.IsTestNet {
+	//	cfg = addressEncoder.HC_testnetAddressP2PKH
+	//}
 
 	//pkHash := btcutil.Hash160(pub)
 	//address, err :=  btcutil.NewAddressPubKeyHash(pkHash, &cfg)

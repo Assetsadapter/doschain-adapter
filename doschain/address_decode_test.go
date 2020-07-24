@@ -13,7 +13,7 @@
  * GNU Lesser General Public License for more details.
  */
 
-package hypercash
+package doschain
 
 import (
 	"encoding/hex"
@@ -29,7 +29,7 @@ func TestAddressDecoder_Encode(t *testing.T) {
 
 	hash, _ := hex.DecodeString("6391dad744d45500476a0fa32a64a0048398cef9")
 
-	cfg := addressEncoder.HC_testnetAddressP2PKH
+	cfg := DOS_mainnetAddressP2PKH
 	addr := addressEncoder.AddressEncode(hash, cfg)
 
 	t.Logf("addr: %s", addr)

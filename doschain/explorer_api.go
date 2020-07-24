@@ -13,7 +13,7 @@
  * GNU Lesser General Public License for more details.
  */
 
-package hypercash
+package doschain
 
 import (
 	"encoding/hex"
@@ -145,7 +145,7 @@ func (wm *WalletManager) getBlockHeightByExplorer() (uint64, error) {
 		return 0, err
 	}
 
-	height := result.Get("info.blocks").Uint()
+	height := result.Get("blocks").Uint()
 
 	return height, nil
 }

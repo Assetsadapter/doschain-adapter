@@ -1,4 +1,4 @@
-package hypercash
+package doschain
 
 //BlockScanNotificationObject 扫描被通知对象
 type HCBlockScanNotificationObject interface {

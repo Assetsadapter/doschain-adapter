@@ -13,7 +13,7 @@
  * GNU Lesser General Public License for more details.
  */
 
-package hypercash
+package doschain
 
 import (
 	"fmt"
@@ -39,8 +39,8 @@ import (
 
 const (
 	//币种
-	Symbol    = "HC"
-	MasterKey = "HyperCash seed"
+	Symbol    = "DOS"
+	MasterKey = "DOSCHAIN seed"
 	CurveType = owcrypt.ECC_CURVE_SECP256K1
 	Decimals  = int32(8)
 )

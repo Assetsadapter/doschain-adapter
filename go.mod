@@ -1,4 +1,4 @@
-module github.com/Assetsadapter/hypercash-adapter
+module github.com/Assetsadapter/doschain-adapter
 
 go 1.12
 

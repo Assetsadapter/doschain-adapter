@@ -13,13 +13,13 @@
  * GNU Lesser General Public License for more details.
  */
 
-package hypercash
+package doschain
 
 import (
 	"encoding/hex"
 	"errors"
 	"fmt"
-	"github.com/blocktree/go-owcdrivers/hypercashTransaction"
+	"github.com/Assetsadapter/doschain-adapter/doschain/doschainTransaction"
 	"github.com/blocktree/openwallet/common"
 	"github.com/blocktree/openwallet/openwallet"
 	"github.com/shopspring/decimal"
@@ -339,7 +339,7 @@ func (decoder *TransactionDecoder) SignHCRawTransaction(wrapper openwallet.Walle
 
 			//签名交易
 			/////////交易单哈希签名
-			sigPub, err := hypercashTransaction.SignTransaction(txHash, keyBytes)
+			sigPub, err := doschainTransaction.SignTransaction(txHash, keyBytes)
 			if err != nil {
 				return fmt.Errorf("transaction hash sign failed, unexpected error: %v", err)
 			} else {
@@ -378,7 +378,7 @@ func (decoder *TransactionDecoder) VerifyHCRawTransaction(wrapper openwallet.Wal
 
 	var (
 		emptyTrans = rawTx.RawHex
-		sigPub     = make([]*hypercashTransaction.SigPub, 0)
+		sigPub     = make([]*doschainTransaction.SigPub, 0)
 	)
 
 	if rawTx.Signatures == nil || len(rawTx.Signatures) == 0 {
@@ -395,7 +395,7 @@ func (decoder *TransactionDecoder) VerifyHCRawTransaction(wrapper openwallet.Wal
 			signature, _ := hex.DecodeString(keySignature.Signature)
 			pubkey, _ := hex.DecodeString(keySignature.Address.PublicKey)
 
-			signaturePubkey := &hypercashTransaction.SigPub{
+			signaturePubkey := &doschainTransaction.SigPub{
 				Signature: signature,
 				PublicKey: pubkey,
 			}
@@ -409,7 +409,7 @@ func (decoder *TransactionDecoder) VerifyHCRawTransaction(wrapper openwallet.Wal
 
 	////////填充签名结果到空交易单
 	/////////验证交易单
-	pass, signedTrans := hypercashTransaction.VerifyAndCombineTransaction(emptyTrans, sigPub)
+	pass, signedTrans := doschainTransaction.VerifyAndCombineTransaction(emptyTrans, sigPub)
 	if pass {
 		decoder.wm.Log.Debug("transaction verify passed")
 		rawTx.IsCompleted = true
@@ -438,9 +438,9 @@ func (decoder *TransactionDecoder) GetRawTransactionFeeRate() (feeRate string, u
 func (decoder *TransactionDecoder) CreateOmniRawTransaction(wrapper openwallet.WalletDAI, rawTx *openwallet.RawTransaction) error {
 
 	var (
-		//vins      = make([]hypercashTransaction.Vin, 0)
-		//vouts     = make([]hypercashTransaction.Vout, 0)
-		//txUnlocks = make([]hypercashTransaction.TxUnlock, 0)
+		//vins      = make([]doschainTransaction.Vin, 0)
+		//vouts     = make([]doschainTransaction.Vout, 0)
+		//txUnlocks = make([]doschainTransaction.TxUnlock, 0)
 		//outputAddrs     = make(map[string]decimal.Decimal)
 		omniOutputAddrs = make(map[string]string)
 
@@ -702,21 +702,21 @@ func (decoder *TransactionDecoder) CreateOmniRawTransaction(wrapper openwallet.W
 	//outputAddrs = appendOutput(outputAddrs, toAddress, computeTotalSend)
 	//outputAddrs[toAddress] = computeTotalSend.StringFixed(decoder.wm.Decimal())
 
-	coinTo := &hypercashTransaction.Vout{
+	coinTo := &doschainTransaction.Vout{
 		Address:         toAddress,
 		Amount:          uint64(computeTotalSend.Shift(decoder.wm.Decimal()).IntPart()),
-		PkScriptVersion: hypercashTransaction.DefaultPkScriptVersion,
+		PkScriptVersion: doschainTransaction.DefaultPkScriptVersion,
 	}
 
 	//changeAmount := balance.Sub(totalSend).Sub(actualFees)
-	var coinChange *hypercashTransaction.Vout
+	var coinChange *doschainTransaction.Vout
 	if changeAmount.GreaterThan(decimal.Zero) {
 		//outputAddrs = appendOutput(outputAddrs, changeAddress, changeAmount)
 
-		coinChange = &hypercashTransaction.Vout{
+		coinChange = &doschainTransaction.Vout{
 			Address:         changeAddress,
 			Amount:          uint64(changeAmount.Shift(decoder.wm.Decimal()).IntPart()),
-			PkScriptVersion: hypercashTransaction.DefaultPkScriptVersion,
+			PkScriptVersion: doschainTransaction.DefaultPkScriptVersion,
 		}
 
 		//outputAddrs[changeAddress] = changeAmount.StringFixed(decoder.wm.Decimal())
@@ -769,7 +769,7 @@ func (decoder *TransactionDecoder) SignOmniRawTransaction(wrapper openwallet.Wal
 
 				//签名交易
 				/////////交易单哈希签名
-				sigPub, err := hypercashTransaction.SignTransaction(txHash, keyBytes)
+				sigPub, err := doschainTransaction.SignTransaction(txHash, keyBytes)
 				if err != nil {
 					return fmt.Errorf("transaction hash sign failed, unexpected error: %v", err)
 				} else {
@@ -809,7 +809,7 @@ func (decoder *TransactionDecoder) VerifyOmniRawTransaction(wrapper openwallet.W
 
 	var (
 		emptyTrans = rawTx.RawHex
-		sigPub     = make([]*hypercashTransaction.SigPub, 0)
+		sigPub     = make([]*doschainTransaction.SigPub, 0)
 	)
 
 	if rawTx.Signatures == nil || len(rawTx.Signatures) == 0 {
@@ -824,7 +824,7 @@ func (decoder *TransactionDecoder) VerifyOmniRawTransaction(wrapper openwallet.W
 			signature, _ := hex.DecodeString(keySignature.Signature)
 			pubkey, _ := hex.DecodeString(keySignature.Address.PublicKey)
 
-			signaturePubkey := &hypercashTransaction.SigPub{
+			signaturePubkey := &doschainTransaction.SigPub{
 				Signature: signature,
 				PublicKey: pubkey,
 				Address:   keySignature.Address.Address,
@@ -837,7 +837,7 @@ func (decoder *TransactionDecoder) VerifyOmniRawTransaction(wrapper openwallet.W
 		}
 	}
 
-	txVins, err := hypercashTransaction.GetVinList(emptyTrans)
+	txVins, err := doschainTransaction.GetVinList(emptyTrans)
 	if err != nil {
 		return errors.New("Invalid transaction data! ")
 	}
@@ -854,7 +854,7 @@ func (decoder *TransactionDecoder) VerifyOmniRawTransaction(wrapper openwallet.W
 
 	////////填充签名结果到空交易单
 	/////////验证交易单
-	pass, signedTrans := hypercashTransaction.VerifyAndCombineTransaction(emptyTrans, sigPub)
+	pass, signedTrans := doschainTransaction.VerifyAndCombineTransaction(emptyTrans, sigPub)
 	if pass {
 		decoder.wm.Log.Debug("transaction verify passed")
 		rawTx.IsCompleted = true
@@ -1041,16 +1041,16 @@ func (decoder *TransactionDecoder) createHCRawTransaction(
 
 	var (
 		err   error
-		vins  = make([]hypercashTransaction.Vin, 0)
-		vouts = make([]hypercashTransaction.Vout, 0)
-		//txUnlocks        = make([]hypercashTransaction.TxUnlock, 0)
+		vins  = make([]doschainTransaction.Vin, 0)
+		vouts = make([]doschainTransaction.Vout, 0)
+		//txUnlocks        = make([]doschainTransaction.TxUnlock, 0)
 		totalSend        = decimal.New(0, 0)
 		destinations     = make([]string, 0)
 		accountTotalSent = decimal.Zero
 		txFrom           = make([]string, 0)
 		txTo             = make([]string, 0)
 		accountID        = rawTx.Account.AccountID
-		//addressPrefix    hypercashTransaction.AddressPrefix
+		//addressPrefix    doschainTransaction.AddressPrefix
 	)
 
 	if len(usedUTXO) == 0 {
@@ -1083,10 +1083,10 @@ func (decoder *TransactionDecoder) createHCRawTransaction(
 	//装配输入
 	for _, utxo := range usedUTXO {
 		utxoAmount := common.StringNumToBigIntWithExp(utxo.Amount, decoder.wm.Decimal())
-		in := hypercashTransaction.Vin{
+		in := doschainTransaction.Vin{
 			TxID:        utxo.TxID,
 			Vout:        uint32(utxo.Vout),
-			Tree:        hypercashTransaction.TxTreeRegular,
+			Tree:        doschainTransaction.TxTreeRegular,
 			Amount:      utxoAmount.Uint64(),
 			LockScript:  utxo.ScriptPubKey,
 			BlockHeight: utxo.BlockHeight,
@@ -1101,20 +1101,20 @@ func (decoder *TransactionDecoder) createHCRawTransaction(
 	for to, amount := range to {
 		txTo = append(txTo, fmt.Sprintf("%s:%s", to, amount.String()))
 		amount = amount.Shift(decoder.wm.Decimal())
-		out := hypercashTransaction.Vout{
+		out := doschainTransaction.Vout{
 			Address:         to,
 			Amount:          uint64(amount.IntPart()),
-			PkScriptVersion: hypercashTransaction.DefaultPkScriptVersion,
+			PkScriptVersion: doschainTransaction.DefaultPkScriptVersion,
 		}
 		vouts = append(vouts, out)
 	}
 
 	//锁定时间
 	lockTime := uint32(0)
-	expiry := hypercashTransaction.NoExpiryValue
+	expiry := doschainTransaction.NoExpiryValue
 
 	/////////构建空交易单
-	emptyTrans, transHash, err := hypercashTransaction.CreateEmptyTransactionAndHash(vins, vouts, lockTime, expiry)
+	emptyTrans, transHash, err := doschainTransaction.CreateEmptyTransactionAndHash(vins, vouts, lockTime, expiry)
 
 	if err != nil {
 		return fmt.Errorf("create transaction failed, unexpected error: %v", err)
@@ -1175,22 +1175,22 @@ func (decoder *TransactionDecoder) createOmniRawTransaction(
 	wrapper openwallet.WalletDAI,
 	rawTx *openwallet.RawTransaction,
 	usedUTXO []*Unspent,
-	coinTo *hypercashTransaction.Vout,
-	coinChange *hypercashTransaction.Vout,
+	coinTo *doschainTransaction.Vout,
+	coinChange *doschainTransaction.Vout,
 	omniTo map[string]string,
 ) error {
 
 	var (
 		err  error
-		vins = make([]hypercashTransaction.Vin, 0)
-		//vouts            = make([]hypercashTransaction.Vout, 0)
-		//txUnlocks        = make([]hypercashTransaction.TxUnlock, 0)
+		vins = make([]doschainTransaction.Vin, 0)
+		//vouts            = make([]doschainTransaction.Vout, 0)
+		//txUnlocks        = make([]doschainTransaction.TxUnlock, 0)
 		accountTotalSent = decimal.Zero
 		toAmount         = decimal.Zero
 		txFrom           = make([]string, 0)
 		txTo             = make([]string, 0)
 		accountID        = rawTx.Account.AccountID
-		//addressPrefix    hypercashTransaction.AddressPrefix
+		//addressPrefix    doschainTransaction.AddressPrefix
 	)
 
 	if len(usedUTXO) == 0 {
@@ -1233,10 +1233,10 @@ func (decoder *TransactionDecoder) createOmniRawTransaction(
 	//装配输入
 	for _, utxo := range usedUTXO {
 		utxoAmount := common.StringNumToBigIntWithExp(utxo.Amount, decoder.wm.Decimal())
-		in := hypercashTransaction.Vin{
+		in := doschainTransaction.Vin{
 			TxID:        utxo.TxID,
 			Vout:        uint32(utxo.Vout),
-			Tree:        hypercashTransaction.TxTreeRegular,
+			Tree:        doschainTransaction.TxTreeRegular,
 			Amount:      utxoAmount.Uint64(),
 			LockScript:  utxo.ScriptPubKey,
 			BlockHeight: utxo.BlockHeight,
@@ -1251,10 +1251,10 @@ func (decoder *TransactionDecoder) createOmniRawTransaction(
 
 	//锁定时间
 	lockTime := uint32(0)
-	expiry := hypercashTransaction.NoExpiryValue
+	expiry := doschainTransaction.NoExpiryValue
 
 	/////////构建空交易单
-	emptyTrans, transHash, err := hypercashTransaction.CreateOmniEmptyTransactionAndHash(vins, coinTo, coinChange, uint64(omniAmount.IntPart()), uint32(propertyID), lockTime, expiry)
+	emptyTrans, transHash, err := doschainTransaction.CreateOmniEmptyTransactionAndHash(vins, coinTo, coinChange, uint64(omniAmount.IntPart()), uint32(propertyID), lockTime, expiry)
 
 	if err != nil {
 		return fmt.Errorf("create transaction failed, unexpected error: %v", err)
@@ -1387,7 +1387,7 @@ func (decoder *TransactionDecoder) CreateOmniSummaryRawTransaction(wrapper openw
 
 	for _, address := range address {
 
-		var coinChange *hypercashTransaction.Vout
+		var coinChange *doschainTransaction.Vout
 
 		//清空临时变量
 		outputAddrs = make(map[string]decimal.Decimal, 0)
@@ -1481,10 +1481,10 @@ func (decoder *TransactionDecoder) CreateOmniSummaryRawTransaction(wrapper openw
 				//outputAddrs = appendOutput(outputAddrs, supportUnspent.Address, changeAmount)
 				//outputAddrs[supportUnspent.Address] = changeAmount.StringFixed(coinDecimals)
 
-				coinChange = &hypercashTransaction.Vout{
+				coinChange = &doschainTransaction.Vout{
 					Address:         supportUnspent.Address,
 					Amount:          uint64(changeAmount.Shift(decoder.wm.Decimal()).IntPart()),
-					PkScriptVersion: hypercashTransaction.DefaultPkScriptVersion,
+					PkScriptVersion: doschainTransaction.DefaultPkScriptVersion,
 				}
 			}
 
@@ -1500,11 +1500,11 @@ func (decoder *TransactionDecoder) CreateOmniSummaryRawTransaction(wrapper openw
 				outputAddrs = appendOutput(outputAddrs, sumRawTx.SummaryAddress, changeAmount)
 				//outputAddrs = appendOutput(outputAddrs, address.Address, changeAmount)
 				//outputAddrs[address.Address] = changeAmount.StringFixed(coinDecimals)
-				coinChange = &hypercashTransaction.Vout{
+				coinChange = &doschainTransaction.Vout{
 					//Address:         address.Address,
 					Address:         sumRawTx.SummaryAddress,
 					Amount:          uint64(changeAmount.Shift(decoder.wm.Decimal()).IntPart()),
-					PkScriptVersion: hypercashTransaction.DefaultPkScriptVersion,
+					PkScriptVersion: doschainTransaction.DefaultPkScriptVersion,
 				}
 			}
 
@@ -1513,10 +1513,10 @@ func (decoder *TransactionDecoder) CreateOmniSummaryRawTransaction(wrapper openw
 		//主币输出第一个为汇总地址，把地址所有主币也汇总到汇总地址
 		//outputAddrs = appendOutput(outputAddrs, sumRawTx.SummaryAddress, transferCost)
 		//outputAddrs[sumRawTx.SummaryAddress] = transferCost.StringFixed(coinDecimals)
-		coinTo := &hypercashTransaction.Vout{
+		coinTo := &doschainTransaction.Vout{
 			Address:         sumRawTx.SummaryAddress,
 			Amount:          uint64(transferCost.Shift(decoder.wm.Decimal()).IntPart()),
-			PkScriptVersion: hypercashTransaction.DefaultPkScriptVersion,
+			PkScriptVersion: doschainTransaction.DefaultPkScriptVersion,
 		}
 
 		//计算汇总数量
@@ -1675,8 +1675,8 @@ func appendOutput(output map[string]decimal.Decimal, address string, amount deci
 }
 
 //根据交易输入地址顺序重排交易hash
-func resetTransHashFunc(origins []*hypercashTransaction.SigPub, addr string, start int) []*hypercashTransaction.SigPub {
-	newHashs := make([]*hypercashTransaction.SigPub, start)
+func resetTransHashFunc(origins []*doschainTransaction.SigPub, addr string, start int) []*doschainTransaction.SigPub {
+	newHashs := make([]*doschainTransaction.SigPub, start)
 	copy(newHashs, origins[:start])
 	end := 0
 	for i := start; i < len(origins); i++ {

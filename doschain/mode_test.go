@@ -1,4 +1,4 @@
-package hypercash
+package doschain
 
 import (
 	"encoding/hex"
