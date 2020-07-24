@@ -1,6 +1,6 @@
-# hypercash-adapter
+# doschain-adapter
 
-hypercash-adapter适配了openwallet.AssetsAdapter接口，给应用提供了底层的区块链协议支持。
+doschain-adapter适配了openwallet.AssetsAdapter接口，给应用提供了底层的区块链协议支持。
 
 
 ## 如何测试
@@ -40,10 +40,5 @@ dataDir = ""
 
 ## 官方资料
 
-HC浏览器
-
-https://hc-explorer.h.cash/
-
-HC OMNI浏览器
-
-https://hcomni-explorer.h.cash/
+dos浏览器
+https://mainnet.doschain.org/
